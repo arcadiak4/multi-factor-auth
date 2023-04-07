@@ -7,21 +7,33 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>User login</title>
+	<title>Sign In</title>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
 	<div style="width: 500px; margin: 45px auto;">
-		<h4 style="text-align: center;">User Login</h4>
+		<h4 style="text-align: center;">Sign In</h4>
+
 		<form method="post">
 			{% csrf_token %}
-			<span style="color: red;">{{ form.username.errors }}</span>
 			<div class="form-group">
+				{{ form.first_name.errors }}
+				{{ form.first_name.label_tag }}
+				{% render_field form.first_name class="form-control" %}
+			</div>
+			<div class="form-group">
+				{{ form.last_name.errors }}
+				{{ form.last_name.label_tag }}
+				{% render_field form.last_name class="form-control" %}
+			</div>
+			<div class="form-group">
+				{{ form.username.errors }}
 				{{ form.username.label_tag }}
 				{% render_field form.username class="form-control" %}
 			</div>
 			<div class="form-group">
+				{{ form.password.errors }}
 				{{ form.password.label_tag }}
 				{% render_field form.password class="form-control" %}
 			</div>
@@ -29,8 +41,6 @@
 				<button type="submit" class="btn btn-warning btn-lg btn-block">Login</button>
 			</div>
 		</form>
-		<br />
-        <h4><a style="text-decoration: underline; float: right;" href="{% url 'signin' %}">Sign in</a></h4>
 	</div>
 
 	<script>
