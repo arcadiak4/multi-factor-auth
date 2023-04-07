@@ -4,6 +4,22 @@ from django.utils.translation import gettext as _
 
 
 class CustomUser(models.Model):
+    first_name = models.CharField(
+        max_length=100,
+        default="",
+        verbose_name=_("First Name"),
+        null=False,
+        blank=False
+    )
+
+    last_name = models.CharField(
+        max_length=100,
+        default="",
+        verbose_name=_("Last Name"),
+        null=False,
+        blank=False
+    )
+
     username = models.CharField(
         max_length=100,
         default="",
@@ -12,9 +28,15 @@ class CustomUser(models.Model):
         blank=False
     )
 
-    password = models.CharField(
+    hash = models.CharField(
         max_length=100,
-        verbose_name=_("Password"),
+        default="",
+        null=False,
+        blank=False,
+    )
+
+    salt = models.CharField(
+        max_length=100,
         default="",
         null=False,
         blank=False,
