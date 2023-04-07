@@ -46,7 +46,7 @@ class SignInUser(CreateView):
         Returns user
         """
 
-        form.instance.hash, form.instance.salt = hash_password(form.instance.password)
+        form.instance.hash, form.instance.salt = hash_password(form.cleaned_data['password'])
         form.save()
 
         return HttpResponse(
