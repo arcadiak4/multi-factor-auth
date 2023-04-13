@@ -91,12 +91,37 @@ from django.shortcuts import render
 from django.conf import settings
 from qrcode import *
 import time
+import pyotp
 
-def qrcode_gen(request):
-    if request.method == 'POST':
-        data = request.POST['data']
-        img = make(data)
-        img_name = 'qr' + str(time.time()) + '.png'
-        img.save(settings.MEDIA_ROOT / img_name)
-        return render(request, 'multifactor/qrcode.html', {'img_name': img_name})
-    return render(request, 'multifactor/qrcode.html')
+# def qrcode_gen(request = None):
+#     if request.method == 'POST':
+#         data = request.POST['data']
+#         img = make(data)
+#         img_name = 'qr' + str(time.time()) + '.png'
+#         img.save(settings.MEDIA_ROOT / img_name)
+#         return render(request, 'multifactor/qrcode.html', {'img_name': img_name})
+#     return render(request, 'multifactor/qrcode.html')
+
+def qrcode_gen(request = None):
+    # generate the secret common key
+    secret_key = pyotp.random_base32()
+    totp_auth = pyotp.totp.TOTP(secret_key).provisioning_uri(name='multi-factor-auth',issuer_name='Groupe_7')
+    print(totp_auth)
+
+    # save the qrcode image in the root folder named /media
+    qrcode = make(totp_auth)
+    qrcode.save(settings.MEDIA_ROOT / "qr_auth.png")
+    
+    # testing totp
+    totp = pyotp.TOTP(secret_key)
+    print("hello")
+    print("Current OTP:", totp.now())
+
+    '''
+        Questions: 
+        What is the best way to store users' secret keys? 
+        If the key is stored in the database and it is hacked then the attacker would be able to generate one time passwords. And it is impossible to encrypt it like passwords with one-way encryption because we need this secret seed to generate one-time passwords.
+    '''
+    
+    return render(request, 'multifactor/qrcode.html', {'img_name': "qr_auth.png"})
+
