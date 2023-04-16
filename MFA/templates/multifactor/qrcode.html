@@ -57,17 +57,17 @@
         <h1>
             QR code generator
         </h1>
-        <!-- <form method="post">
-            {% csrf_token %}
-            <input type="text" name="data" id="data" placeholder="write something or enter url">
-            <button>Generate</button>
-        </form> -->
-
         <div class="qr-img">
             {% if img_name %}
-                <img src="/media/{{ img_name }}" alt="qr code">
+            <img src="/media/{{ img_name }}" alt="qr code">
             {% endif %}
         </div>
+        <h4>After scanning the QR Code with your Authenticator App, check the code from your Authenticator App</h4>
+        <form action="/check_mfa" method="post">
+            {% csrf_token %}
+            <input type="text" name="otp_input" id="otp_input" placeholder="Write the 6 digits code">
+            <button>Check</button>
+        </form>
     </main>
 </body>
 </html>

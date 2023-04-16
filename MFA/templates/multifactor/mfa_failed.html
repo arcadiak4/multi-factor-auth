@@ -11,10 +11,9 @@
 </head>
 <body>
 	<div style="width: 500px; margin: 45px;">
-		<h4>Success! User {{username}} has been created!</h4>
+		<h4>MFA Failed !</h4>
         <br />
-        <a href="{% url 'login' %}">Try to log in</a>
-		<a style="text-decoration: underline; float: right;" href="{% url 'qrcode' %}">Activate Multi-Factor Authentication</a>
+        <a href="{% url 'login' %}">Go back to login page (logout)</a>
 	</div>
     
 	<script>

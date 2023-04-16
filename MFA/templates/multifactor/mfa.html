@@ -11,10 +11,13 @@
 </head>
 <body>
 	<div style="width: 500px; margin: 45px;">
-		<h4>Success! User {{username}} has been created!</h4>
+		<h4>Test Multi-Factor Authentication</h4>
         <br />
-        <a href="{% url 'login' %}">Try to log in</a>
-		<a style="text-decoration: underline; float: right;" href="{% url 'qrcode' %}">Activate Multi-Factor Authentication</a>
+        <form action="/check_mfa" method="post">		
+            {% csrf_token %}
+            <input id="otp_input" type="text" name="otp_input" placeholder="Write the 6 digits code">
+            <input type="submit" value="Check">
+        </form>
 	</div>
     
 	<script>
