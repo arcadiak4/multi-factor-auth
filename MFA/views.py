@@ -100,7 +100,7 @@ class LoginUser(FormView):
 '''
 
 from django.shortcuts import render
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, logout, authenticate
 
 def LoginUser(request):
     form = forms.LoginForm()
@@ -129,6 +129,16 @@ def LoginUser(request):
                 form.add_error("username", 'Wrong username and/or password')
 
     return render(request, 'multifactor/login.html', context={'form': form})
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+@login_required
+def LogOutUser(request):
+    # print(request.user.is_authenticated)
+    logout(request)
+    # print(request.user.is_authenticated)
+    return redirect('login')
 
 from django.shortcuts import render
 from django.conf import settings
@@ -161,7 +171,6 @@ def qrcode_gen(request):
     print("Shared secret:", shared_secret.now())
     
     return render(request, 'multifactor/qrcode.html', {'img_name': "qr_auth.png"})
-
 
 def check_mfa(request):
     # testing totp
