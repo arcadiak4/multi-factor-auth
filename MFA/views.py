@@ -6,6 +6,8 @@
 # from django.template.loader import render_to_string
 #from .models import CustomUser
 from . import forms
+import os
+
 '''
 import base64
 import hashlib
@@ -164,7 +166,7 @@ def qrcode_gen(request):
     qrcode = make(totp_auth)
 
     # save the QR Code generated image in the root folder named /media
-    qrcode.save(settings.MEDIA_ROOT / "qr_auth.png")
+    qrcode.save(os.path.join(settings.MEDIA_ROOT, "qr_auth.png"))
 
     # print the current OTP
     shared_secret = pyotp.TOTP(secret_key)
