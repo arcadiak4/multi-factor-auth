@@ -13,10 +13,12 @@
 	<div style="width: 500px; margin: 45px;">
 		<h4>Test Multi-Factor Authentication</h4>
         <br />
-        <form action="/check_mfa" method="post">		
+
+        <form style="width: 300px;" action="/check-mfa" method="post">
             {% csrf_token %}
-            <input id="otp_input" type="text" name="otp_input" placeholder="Write the 6 digits code">
-            <input type="submit" value="Check">
+            <input class="form-control" type="text" name="otp_input" id="otp_input" placeholder="Write the 6 digits code">
+            <br/>
+            <button class="btn btn-light">Check</button>
         </form>
 	</div>
     

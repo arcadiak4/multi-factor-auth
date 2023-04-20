@@ -1,11 +1,11 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title>QR code generator</title>
     <style>
         *{
@@ -63,10 +63,11 @@
             {% endif %}
         </div>
         <h4>After scanning the QR Code with your Authenticator App, check the code from your Authenticator App</h4>
-        <form action="/check_mfa" method="post">
+
+        <form action="/qrcode-check" method="post">
             {% csrf_token %}
-            <input type="text" name="otp_input" id="otp_input" placeholder="Write the 6 digits code">
-            <button>Check</button>
+            <input type="hidden" name="secret_key" id="secret_key" value="{{secret_key}}">
+            <button class="btn btn-light" style="float: right;">Next</button>
         </form>
     </main>
 </body>

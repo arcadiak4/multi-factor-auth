@@ -156,7 +156,6 @@ def qrcode_gen(request):
     # save secret key in plaintext in the database
     current_user = request.user
     print (current_user.username)
-    User.objects.filter(username=current_user).update(mfa_key=secret_key)
    
     # generate TOTP
     totp_auth = pyotp.TOTP(secret_key).provisioning_uri(name='multi-factor-auth',issuer_name='Groupe_7')
@@ -172,7 +171,13 @@ def qrcode_gen(request):
     shared_secret = pyotp.TOTP(secret_key)
     print("Shared secret:", shared_secret.now())
     
-    return render(request, 'multifactor/qrcode.html', {'img_name': "qr_auth.png"})
+    return render(request, 'multifactor/qrcode.html', {'img_name': 'qr_auth.png', 'secret_key': secret_key})
+
+def qrcode_check(request):
+    current_user = request.user
+    User.objects.filter(username=current_user).update(mfa_key=request.POST.get('secret_key'))
+
+    return render(request, 'multifactor/qrcode_check.html', {})
 
 def check_mfa(request):
     # testing totp

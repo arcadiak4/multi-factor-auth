@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>QR code generator</title>
+</head>
+<body>
+    <main>
+        <div style="width: 500px; margin: 45px;">
+            <form action="/check-mfa" method="post">
+                {% csrf_token %}
+                <label for="otp_input">Check MFA</label>
+                <input class="form-control" type="text" name="otp_input" id="otp_input" placeholder="Write the 6 digits code">
+                <br/>
+                <button class="btn btn-light">Check</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
