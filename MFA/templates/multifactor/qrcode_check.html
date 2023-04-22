@@ -11,10 +11,12 @@
 <body>
     <main>
         <div style="width: 500px; margin: 45px;">
-            <form action="/check-mfa" method="post">
+            <form action="/qrcode-check" method="post">
                 {% csrf_token %}
-                <label for="otp_input">Check MFA</label>
-                <input class="form-control" type="text" name="otp_input" id="otp_input" placeholder="Write the 6 digits code">
+                <label for="totp_input">Check MFA</label>
+                {% csrf_token %}
+                <input type="hidden" name="secret_key" id="secret_key" value="{{secret_key}}">
+                <input class="form-control" type="text" name="totp_input" id="totp_input" placeholder="Write the 6 digits code">
                 <br/>
                 <button class="btn btn-light">Check</button>
             </form>

@@ -37,7 +37,7 @@ def LoginUser(request):
                 if str(User.objects.filter(username=current_user).values("mfa_key").first()['mfa_key']) != '':
                     # print("User has activated MFA and must enter the OTP.")
                     # render the MFA page
-                    return render(request, 'multifactor/mfa.html')
+                    return render(request, 'multifactor/mfa_check.html')
                 # the login has succeed
                 return render(request, 'multifactor/login_success.html', {"username": form.cleaned_data['username']})
             
@@ -45,7 +45,6 @@ def LoginUser(request):
                 form.add_error("username", 'Wrong username and/or password')
 
     return render(request, 'multifactor/login.html', context={'form': form})
-
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -62,48 +61,51 @@ from qrcode import *
 import pyotp
 from .models import User
 
-def qrcode_gen(request):
+def enable_mfa_qrcode(request):
     # generate the secret common key
     secret_key = pyotp.random_base32()
-    # print("Secret key:", secret_key)
-    
-    # save secret key in plaintext in the database
-    current_user = request.user
-    # print ("Current user:", current_user.username)
-   
     # generate TOTP
     totp_auth = pyotp.TOTP(secret_key).provisioning_uri(name='multi-factor-auth',issuer_name='Groupe_7')
-    # print(totp_auth)
-
     # generate the corresponding QR Code
     qrcode = make(totp_auth)
-
     # save the QR Code generated image in the root folder named /media
     qrcode.save(os.path.join(settings.MEDIA_ROOT, "qr_auth.png"))
-
-    # print the current OTP
-    # shared_secret = pyotp.TOTP(secret_key)
-    # print("Shared secret:", shared_secret.now())
     
-    return render(request, 'multifactor/qrcode.html', {'img_name': 'qr_auth.png', 'secret_key': secret_key})
+    return render(request, 'multifactor/enable_mfa_qrcode.html', {'img_name': 'qr_auth.png', 'secret_key': secret_key})
 
 def qrcode_check(request):
-    current_user = request.user
-    User.objects.filter(username=current_user).update(mfa_key=request.POST.get('secret_key'))
+    if request.method == 'POST':
+        totp_input = request.POST.get('totp_input')
+        secret_key = request.POST.get('secret_key')
+        shared_secret = pyotp.TOTP(secret_key)
+        
+        # if the same TOTP code, store the secret key in the database
+        good_totp = shared_secret.now()
+        if str(totp_input) == str(good_totp):
+            # save secret key in plaintext in the database
+            current_user = request.user
+            User.objects.filter(username=current_user).update(mfa_key=request.POST.get('secret_key'))
+            return render(request, 'multifactor/login_success.html', {"username": current_user.username})
+        # redirect to failed status page
+        else:
+            return render(request, 'multifactor/mfa_failed.html')
 
-    return render(request, 'multifactor/qrcode_check.html', {})
+    # transfer the secret key to the POST request
+    secret_key = request.GET.get('secret_key')
+    return render(request, 'multifactor/qrcode_check.html', {'secret_key': secret_key})
 
-def check_mfa(request):
+def mfa_check(request):
     if request.method == 'POST':
         totp_input = request.POST.get('totp_input')
         
         # retrieve the current OTP from the current User
         current_user = request.user
-        mfa_key = User.objects.filter(username=current_user).values("mfa_key").first()['mfa_key']
-
+        secret_key = User.objects.filter(username=current_user).values("mfa_key").first()['mfa_key']
+        
         # test the validity of the OTP (client OTP and the server OTP)
-        shared_secret = pyotp.TOTP(mfa_key)
-        if str(totp_input) == str(shared_secret.now()):
+        shared_secret = pyotp.TOTP(secret_key)
+        good_totp = shared_secret.now()
+        if str(totp_input) == str(good_totp):
             return render(request, 'multifactor/login_success.html', {"username": current_user.username})
     
     return render(request, 'multifactor/mfa_failed.html')

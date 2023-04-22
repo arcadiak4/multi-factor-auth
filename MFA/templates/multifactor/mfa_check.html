@@ -13,7 +13,7 @@
 	<div style="width: 500px; margin: 45px;">
 		<h4>Multi-Factor Authentication</h4>
         <br/>
-        <form style="width: 300px;" action="/check-mfa" method="post">
+        <form style="width: 300px;" action="/mfa-check" method="post">
             {% csrf_token %}
             <input class="form-control" type="text" name="totp_input" id="totp_input" placeholder="Write the 6 digits code">
             <br/>
