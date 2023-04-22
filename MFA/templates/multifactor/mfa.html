@@ -5,18 +5,17 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>User login success</title>
+	<title>Check MFA</title>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
 	<div style="width: 500px; margin: 45px;">
-		<h4>Test Multi-Factor Authentication</h4>
-        <br />
-
+		<h4>Multi-Factor Authentication</h4>
+        <br/>
         <form style="width: 300px;" action="/check-mfa" method="post">
             {% csrf_token %}
-            <input class="form-control" type="text" name="otp_input" id="otp_input" placeholder="Write the 6 digits code">
+            <input class="form-control" type="text" name="totp_input" id="totp_input" placeholder="Write the 6 digits code">
             <br/>
             <button class="btn btn-light">Check</button>
         </form>

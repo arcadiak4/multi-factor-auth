@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <title>QR code generator</title>
+    <title>Enable login MFA</title>
     <style>
         *{
             box-sizing: border-box;
@@ -54,16 +54,13 @@
 </head>
 <body>
     <main>
-        <h1>
-            QR code generator
-        </h1>
+        <h1>Activate MFA</h1>
         <div class="qr-img">
             {% if img_name %}
             <img src="/media/{{ img_name }}" alt="qr code">
             {% endif %}
         </div>
-        <h4>After scanning the QR Code with your Authenticator App, check the code from your Authenticator App</h4>
-
+        <h4>After scanning the QR Code with your Authenticator App (eg: Google Authenticator), enter the TOTP code:</h4>
         <form action="/qrcode-check" method="post">
             {% csrf_token %}
             <input type="hidden" name="secret_key" id="secret_key" value="{{secret_key}}">
